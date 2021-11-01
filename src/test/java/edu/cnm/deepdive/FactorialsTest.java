@@ -3,36 +3,48 @@ package edu.cnm.deepdive;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigInteger;
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class FactorialsTest {
 
-  //^\s*(\d+)\s*(\d+).*$ -> $1, ; $2,
-  final static int[] args = {0,1,5,10,13,32,41};
-  final static BigInteger[] expectedValues = {new BigInteger("1"),new BigInteger("1"),new BigInteger("120"),new BigInteger("3628800"),new BigInteger("6227020800"), new BigInteger("263130836933693530167218012160000000"), new BigInteger("33452526613163807108170062053440751665152000000000")};
-
-  @Test
-  void computeRecursive_nonNegative() {
-    for (int i = 0; i < args.length; i++) {
-      int n = args[i];
-      BigInteger expectedValue = expectedValues[i];
-      BigInteger actualValue = Factorials.computeRecursive(n);
-      assertEquals(expectedValue,actualValue);
-    }
+  static Stream<Arguments> factorial() {
+    return Stream.of(
+        Arguments.of(0,new BigInteger("1")),
+        Arguments.of(1,new BigInteger("1")),
+        Arguments.of(5,new BigInteger("120")),
+        Arguments.of(10,new BigInteger("3628800")),
+        Arguments.of(13,new BigInteger("6227020800")),
+        Arguments.of(32,new BigInteger("263130836933693530167218012160000000")),
+        Arguments.of(41,new BigInteger("33452526613163807108170062053440751665152000000000"))
+    );
   }
 
-  @Test
-  void computeIterative_nonNegative() {
-    for (int i = 0; i < args.length; i++) {
-      int n = args[i];
-      BigInteger expectedValue = expectedValues[i];
-      BigInteger actualValue = Factorials.computeIterative(n);
-      assertEquals(expectedValue,actualValue);
-    }
+  static Stream<Arguments> factorial_exception() {
+    return Stream.of(
+        Arguments.of(-1,new IllegalArgumentException())
+    );
   }
 
-  @Test
-  void computeRecursive_negative_exception() {
-    assertThrows(IllegalArgumentException.class, () -> Factorials.computeRecursive(-1));
+  @ParameterizedTest
+  @MethodSource(value = "factorial")
+  void computeRecursive_nonNegative(int arg, BigInteger expectedValue) {
+    BigInteger actualValue = Factorials.computeRecursive(arg);
+    assertEquals(expectedValue, actualValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "factorial")
+  void computeIterative_nonNegative(int arg, BigInteger expectedValue) {
+    BigInteger actualValue = Factorials.computeIterative(arg);
+    assertEquals(expectedValue, actualValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource(value = "factorial_exception")
+  void computeRecursive_negative_exception(int n) {
+    assertThrows(IllegalArgumentException.class, () -> Factorials.computeRecursive(n));
   }
 }
