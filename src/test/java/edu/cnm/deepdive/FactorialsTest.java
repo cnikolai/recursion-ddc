@@ -22,6 +22,16 @@ class FactorialsTest {
   }
 
   @Test
+  void computeIterative_nonNegative() {
+    for (int i = 0; i < args.length; i++) {
+      int n = args[i];
+      BigInteger expectedValue = expectedValues[i];
+      BigInteger actualValue = Factorials.computeIterative(n);
+      assertEquals(expectedValue,actualValue);
+    }
+  }
+
+  @Test
   void computeRecursive_negative_exception() {
     assertThrows(IllegalArgumentException.class, () -> Factorials.computeRecursive(-1));
   }

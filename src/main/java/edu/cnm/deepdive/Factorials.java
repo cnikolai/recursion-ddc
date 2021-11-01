@@ -13,7 +13,16 @@ public abstract class Factorials {
     } else {
       return BigInteger.valueOf(n).multiply(computeRecursive(n-1));
     }
-    //return (n == 0) ? 1 : (n.multiply(computeRecursive(n.subtract(1))));
   }
 
+  public static BigInteger computeIterative(int n) throws IllegalArgumentException {
+    if (n < 0) {
+      throw new IllegalArgumentException("Parameter must be greater than or equal to zero.");
+    }
+    BigInteger factorial = BigInteger.ONE;
+    for (int i = n; i > 0; i--) {
+      factorial = factorial.multiply(BigInteger.valueOf(i));
+    }
+    return factorial;
+  }
 }
